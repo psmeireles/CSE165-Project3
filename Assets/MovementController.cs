@@ -20,15 +20,17 @@ public class MovementController : MonoBehaviour
     {
         provider = FindObjectOfType<LeapProvider>();
 
+        
         speed_increment = 0.001f;
         max_speed = 3.0f;
-        v_magnitude = 0.5f;
+        v_magnitude = 0.0f;
         v_dir = playerRig.transform.rotation * Vector3.forward;
     }
 
     // Update is called once per frame
     void Update()
     {
+        int speedLevel = 0;
         Frame frame = provider.CurrentFrame;
         Hand rightHand = null;
         Hand leftHand = null;
@@ -45,23 +47,39 @@ public class MovementController : MonoBehaviour
             }
         }
 
-        if (leftHand != null && leftHand.Fingers[1].IsExtended) // add threshold per finger extended
+        if (leftHand != null)
         {
-            //leftHand.Fingers[1].
-            Debug.Log("left index finger extended");
-            //playerRig.transform.Translate()
-            if(v_magnitude < max_speed)
+            foreach (Finger f in leftHand.Fingers)
             {
-                v_magnitude += speed_increment;
+                if (f.IsExtended)
+                {
+                    speedLevel++;
+                }
+            }
+
+            if (speedLevel > 0) // add threshold per finger extended
+            {
+                Debug.Log("left index finger extended");
+                //playerRig.transform.Translate()
+                if (v_magnitude < max_speed * speedLevel / 5.0f)
+                {
+                    v_magnitude += speed_increment * speedLevel;
+                }
+                else if(v_magnitude > max_speed * speedLevel / 5.0f)
+                {
+                    v_magnitude -= speed_increment * 2.0f;
+                }
+            }
+            else // Slow user down if cannot detect LHand or L index finger not extended
+            {
+                if (v_magnitude > 0)
+                {
+                    v_magnitude -= speed_increment * 2.0f;
+                }
             }
         }
-        else // Slow user down if cannot detect LHand or L index finger not extended
-        {
-            if (v_magnitude > 0)
-            {
-                v_magnitude -= speed_increment*2.0f;
-            }
-        }
+
+
 
         if (rightHand != null && rightHand.Fingers[1].IsExtended)
         {
