@@ -313,6 +313,18 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 300738039}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1366807563
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1366807561}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c3650626ae8cf54b92463cea1a72198, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1380430418
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -385,6 +397,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4050235664251215}
   - component: {fileID: 114121827833360833}
+  - component: {fileID: 1193063169103042}
   m_Layer: 0
   m_Name: Leap Rig
   m_TagString: Untagged
@@ -392,6 +405,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!135 &1193063169103042
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1193063169103041}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.1524
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1339460466690929
 GameObject:
   m_ObjectHideFlags: 0
