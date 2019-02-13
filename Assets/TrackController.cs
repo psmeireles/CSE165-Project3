@@ -7,6 +7,7 @@ public class TrackController : MonoBehaviour
 {
     public TextAsset trackFile;
     public GameObject checkPoint;
+    public GameObject campus;
 
     List<GameObject> checkpoints;
     // Start is called before the first frame update
@@ -23,12 +24,13 @@ public class TrackController : MonoBehaviour
             else {
                 items = line.Split(' ');
             }
-            int x = int.Parse(items[0]);
-            int y = int.Parse(items[1]);
-            int z = int.Parse(items[2]);
+            float x = float.Parse(items[0]);
+            float y = float.Parse(items[1]);
+            float z = float.Parse(items[2]);
 
             GameObject obj = GameObject.Instantiate(checkPoint);
-            obj.transform.Translate(x, y, z);
+            Vector3 translation = new Vector3(x, y, z);
+            obj.transform.Translate(translation + campus.transform.position);
             checkpoints.Add(obj);
         }
     }
