@@ -98,6 +98,7 @@ public class MovementController : MonoBehaviour
             
         }
         // Move player forward
-        playerRig.transform.Translate(v_magnitude * v_dir, Space.World);
+        //playerRig.transform.Translate(v_magnitude * v_dir, Space.World);
+        playerRig.transform.position += v_magnitude * v_dir;
     }
 }
