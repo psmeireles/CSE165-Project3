@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using Leap;
 using Leap.Unity;
-
 public class MovementController : MonoBehaviour
 {
     public GameObject playerRig;

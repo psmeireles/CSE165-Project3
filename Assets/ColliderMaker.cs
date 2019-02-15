@@ -10,6 +10,7 @@ public class ColliderMaker : MonoBehaviour
         foreach(Transform child in this.GetComponentInChildren<Transform>()) {
             MeshCollider collider = child.gameObject.AddComponent<MeshCollider>();
             collider.sharedMesh = child.gameObject.GetComponent<MeshFilter>().mesh;
+            collider.convex = true;
         }
     }
 
