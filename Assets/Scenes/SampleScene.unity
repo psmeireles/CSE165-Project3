@@ -583,6 +583,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerRig: {fileID: 1193063169103041}
   rightHandObject: {fileID: 1997533576838179}
+  handModels: {fileID: 1671192331315519}
 --- !u!1 &1428755608
 GameObject:
   m_ObjectHideFlags: 0
@@ -1011,7 +1012,7 @@ MonoBehaviour:
   _deviceOffsetZAxis: 0.12
   _deviceTiltXAxis: 5
   _deviceOrigin: {fileID: 0}
-  _temporalWarpingMode: 0
+  _temporalWarpingMode: 3
   _customWarpAdjustment: 17
   _updateHandInPrecull: 0
 --- !u!114 &114392913383681225
