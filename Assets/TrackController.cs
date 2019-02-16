@@ -19,6 +19,7 @@ public class TrackController : MonoBehaviour
     float radius = 9.144f;
     LineRenderer waypointLine;
     float startTime;
+    float collideTime;
 
     public static bool movementEnabled;
     // Start is called before the first frame update
@@ -53,6 +54,7 @@ public class TrackController : MonoBehaviour
         waypointLine = this.GetComponent<LineRenderer>();
         movementEnabled = false;
         startTime = Time.time;
+        collideTime = 0.0f;
 
     }
 
@@ -77,33 +79,44 @@ public class TrackController : MonoBehaviour
             distanceText.GetComponent<Text>().text = "Finished!";
         }
 
+        if (PlayerColliderController.hasCollided)
+        {
+            collideTime = Time.time;
+            playerRig.transform.position = checkpoints[nextCheckpoint - 1].transform.position;
+            movementEnabled = false;
+            PlayerColliderController.hasCollided = false;
+        }
 
         if (Time.time - startTime < 5) {
-            countdown.text = Mathf.Floor(5 - (Time.time - startTime)).ToString();
+            countdown.text = Mathf.Ceil(5 - (Time.time - startTime)).ToString();
             return;
         }
         else {
-            movementEnabled = true;
+            //movementEnabled = true;
+
+            // Check collider time
+            if(Time.time - collideTime < 3)
+            {
+                countdown.text = Mathf.Ceil(3 - (Time.time - collideTime)).ToString();
+                return;
+            }
+            else
+            {
+                movementEnabled = true;
+                PlayerColliderController.hasCollided = false;
+            }
+            
+
+            // Update stopwatch time as long as there are remaining checkpoints
             if(nextCheckpoint < checkpoints.Count - 1) {
                 countdown.text = "Elapsed Time:\t" + (Time.time - startTime - 5).ToString("0.00");
             }
-            else {
+            else { //Reached last checkpoint, do not update time anymore
                 movementEnabled = false;
             }
         }
+
+        
     }
 
-    private void OnTriggerEnter(Collider other) {
-        // Change the cube color to green.
-        playerRig.transform.position = checkpoints[nextCheckpoint - 1].transform.position;
-        movementEnabled = false;
-        Debug.Log("Trigger");
-    }
-
-    private void OnCollisionEnter(Collider other) {
-        // Change the cube color to green.
-        playerRig.transform.position = checkpoints[nextCheckpoint - 1].transform.position;
-        movementEnabled = false;
-        Debug.Log("Collision");
-    }
 }

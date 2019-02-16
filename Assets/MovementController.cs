@@ -56,6 +56,7 @@ public class MovementController : MonoBehaviour
 
         if (leftHand != null)
         {
+            // Increase speed level based on number of fingers extended to control max speed
             foreach (Finger f in leftHand.Fingers)
             {
                 if (f.IsExtended)
@@ -66,7 +67,7 @@ public class MovementController : MonoBehaviour
 
             if (speedLevel > 0) // add threshold per finger extended
             {
-                Debug.Log("left index finger extended");
+                //Debug.Log("left index finger extended");
                 //playerRig.transform.Translate()
                 if (v_magnitude < max_speed * speedLevel / 5.0f)
                 {
@@ -74,14 +75,18 @@ public class MovementController : MonoBehaviour
                 }
                 else if(v_magnitude > max_speed * speedLevel / 5.0f)
                 {
-                    v_magnitude -= speed_increment * 2.0f;
+                    v_magnitude -= speed_increment * 5.0f;
                 }
             }
             else // Slow user down if cannot detect LHand or L index finger not extended
             {
                 if (v_magnitude > 0)
                 {
-                    v_magnitude -= speed_increment * 2.0f;
+                    v_magnitude -= speed_increment * 5.0f;
+                }
+                else
+                {
+                    v_magnitude = 0;
                 }
             }
         }
@@ -90,7 +95,7 @@ public class MovementController : MonoBehaviour
 
         if (rightHand != null && rightHand.Fingers[1].IsExtended)
         {
-            Debug.Log("right index finger extended");
+            //Debug.Log("right index finger extended");
             //Debug.Log(rightHand.Rotation.angle);
             //rightHand.Rotation = (LeapQuaternion)(new Quaternion(0.0f, 0.0f, 0.0f, 1.0f));
             Quaternion temp = new Quaternion(rightHand.Rotation.x, rightHand.Rotation.y, rightHand.Rotation.z, rightHand.Rotation.w);
@@ -101,9 +106,7 @@ public class MovementController : MonoBehaviour
         {
             Vector dir = rightHand.Direction;
             v_dir = rightHandObject.transform.localToWorldMatrix * new Vector4(dir.x, dir.y, dir.z, 0.0f);
-            Debug.Log(v_dir);
-
-            
+            //Debug.Log(v_dir
         }
         // Move player forward
         playerRig.transform.Translate(v_magnitude * v_dir, Space.World);

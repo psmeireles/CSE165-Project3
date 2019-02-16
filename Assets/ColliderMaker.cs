@@ -11,7 +11,7 @@ public class ColliderMaker : MonoBehaviour
             MeshCollider collider = child.gameObject.AddComponent<MeshCollider>();
             collider.sharedMesh = child.gameObject.GetComponent<MeshFilter>().mesh;
             collider.convex = true;
-            //collider.isTrigger = true;
+            collider.isTrigger = true;
         }
 
         GameObject plane = GameObject.Find("Mesh129_Model");
