@@ -13,9 +13,9 @@ public class TrackController : MonoBehaviour
     public Transform distanceText;
     public Text countdown;
 
-    List<GameObject> checkpoints;
+    public List<GameObject> checkpoints;
 
-    int nextCheckpoint;
+    public int nextCheckpoint;
     float radius = 9.144f;
     LineRenderer waypointLine;
     float startTime;
@@ -91,5 +91,19 @@ public class TrackController : MonoBehaviour
                 movementEnabled = false;
             }
         }
+    }
+
+    private void OnTriggerEnter(Collider other) {
+        // Change the cube color to green.
+        playerRig.transform.position = checkpoints[nextCheckpoint - 1].transform.position;
+        movementEnabled = false;
+        Debug.Log("Trigger");
+    }
+
+    private void OnCollisionEnter(Collider other) {
+        // Change the cube color to green.
+        playerRig.transform.position = checkpoints[nextCheckpoint - 1].transform.position;
+        movementEnabled = false;
+        Debug.Log("Collision");
     }
 }
