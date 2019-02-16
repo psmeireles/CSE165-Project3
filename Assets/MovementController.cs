@@ -72,7 +72,7 @@ public class MovementController : MonoBehaviour
                 //playerRig.transform.Translate()
                 if (v_magnitude < max_speed * speedLevel / 5.0f)
                 {
-                    v_magnitude += speed_increment * speedLevel;
+                    v_magnitude += speed_increment * speedLevel * 2.0f;
                 }
                 else if(v_magnitude > max_speed * speedLevel / 5.0f)
                 {
@@ -83,7 +83,7 @@ public class MovementController : MonoBehaviour
             {
                 if (v_magnitude > 0)
                 {
-                    v_magnitude -= speed_increment * 10.0f;
+                    v_magnitude -= speed_increment * 30.0f;
                 }
                 else
                 {
