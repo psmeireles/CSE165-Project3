@@ -18,6 +18,7 @@ public class TrackController : MonoBehaviour
     public int nextCheckpoint;
     float radius = 9.144f;
     LineRenderer waypointLine;
+    LineRenderer trackLine;
     float startTime;
     float collideTime;
 
@@ -47,11 +48,21 @@ public class TrackController : MonoBehaviour
             checkpoints.Add(obj);
         }
 
-        playerRig.transform.position = checkpoints[0].transform.position;
+        playerRig.transform.position = checkpoints[0].transform.position + new Vector3(0.0f, 0.6f, 0.0f);
         playerRig.transform.LookAt(checkpoints[1].transform.position);
 
         nextCheckpoint = 0;
-        waypointLine = this.GetComponent<LineRenderer>();
+        waypointLine = playerRig.GetComponent<LineRenderer>();
+        trackLine = this.GetComponent<LineRenderer>();
+        trackLine.positionCount = checkpoints.Count;
+        trackLine.material.color = Color.blue;
+
+        for (int i = 0; i < checkpoints.Count; i++)
+        {
+            trackLine.SetPosition(i, checkpoints[i].transform.position);
+        }
+       
+
         movementEnabled = false;
         startTime = Time.time;
         collideTime = 0.0f;
@@ -62,18 +73,24 @@ public class TrackController : MonoBehaviour
     void Update()
     {
 
-        Vector3 nextCPCenter = checkpoints[nextCheckpoint].transform.position;
+        Vector3 nextCPCenter = checkpoints[checkpoints.Count-1].transform.position;
+        
+        // Only assign new center if it is not the last one in the list
+        if(nextCheckpoint < checkpoints.Count)
+        {
+            nextCPCenter = checkpoints[nextCheckpoint].transform.position;
+        }
         // Checking next checkpoint
-        if (Vector3.Distance(playerRig.transform.position, nextCPCenter) < radius) {
-            checkpoints[nextCheckpoint].GetComponent<Renderer>().material.color = Color.green;
+        if (nextCheckpoint < checkpoints.Count && Vector3.Distance(playerRig.transform.position, nextCPCenter) < radius) {
+            checkpoints[nextCheckpoint].GetComponent<Renderer>().material.color = new Color(0,1,0,0.25f);
             nextCheckpoint++;
         }
         
-        if(nextCheckpoint < checkpoints.Count - 1) {
+        if(nextCheckpoint < checkpoints.Count) {
             nextCPCenter = checkpoints[nextCheckpoint].transform.position;
-            waypointLine.SetPosition(0, playerRig.transform.position);
+            waypointLine.SetPosition(0, playerRig.transform.position + new Vector3(0, -0.5f, 0.0f));
             waypointLine.SetPosition(1, nextCPCenter);
-            distanceText.GetComponent<Text>().text = "Distance: " + Vector3.Distance(playerRig.transform.position, nextCPCenter).ToString("0.00");
+            distanceText.GetComponent<Text>().text = "Distance: " + Vector3.Distance(playerRig.transform.position, nextCPCenter).ToString("0.00") + "m";
         }
         else {
             distanceText.GetComponent<Text>().text = "Finished!";
@@ -82,7 +99,7 @@ public class TrackController : MonoBehaviour
         if (PlayerColliderController.hasCollided)
         {
             collideTime = Time.time;
-            playerRig.transform.position = checkpoints[nextCheckpoint - 1].transform.position;
+            playerRig.transform.position = checkpoints[nextCheckpoint - 1].transform.position + new Vector3(0.0f, 0.6f, 0.0f);
             movementEnabled = false;
             PlayerColliderController.hasCollided = false;
         }
@@ -92,9 +109,8 @@ public class TrackController : MonoBehaviour
             return;
         }
         else {
-            //movementEnabled = true;
 
-            // Check collider time
+            // Check collision delay time
             if(Time.time - collideTime < 3)
             {
                 countdown.text = Mathf.Ceil(3 - (Time.time - collideTime)).ToString();
@@ -108,11 +124,12 @@ public class TrackController : MonoBehaviour
             
 
             // Update stopwatch time as long as there are remaining checkpoints
-            if(nextCheckpoint < checkpoints.Count - 1) {
+            if(nextCheckpoint < checkpoints.Count) {
                 countdown.text = "Elapsed Time:\t" + (Time.time - startTime - 5).ToString("0.00");
             }
             else { //Reached last checkpoint, do not update time anymore
                 movementEnabled = false;
+                waypointLine.enabled = false; // hide waypoint line
             }
         }
 

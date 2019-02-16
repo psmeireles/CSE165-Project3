@@ -38,6 +38,7 @@ public class MovementController : MonoBehaviour
         Hand leftHand = null;
 
         if(!TrackController.movementEnabled) {
+            v_magnitude = 0.0f; // reset speed to 0 when not moving
             return;
         }
 
@@ -75,14 +76,14 @@ public class MovementController : MonoBehaviour
                 }
                 else if(v_magnitude > max_speed * speedLevel / 5.0f)
                 {
-                    v_magnitude -= speed_increment * 5.0f;
+                    v_magnitude -= speed_increment * 10.0f;
                 }
             }
             else // Slow user down if cannot detect LHand or L index finger not extended
             {
                 if (v_magnitude > 0)
                 {
-                    v_magnitude -= speed_increment * 5.0f;
+                    v_magnitude -= speed_increment * 10.0f;
                 }
                 else
                 {
