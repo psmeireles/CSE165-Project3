@@ -12,6 +12,9 @@ public class ColliderMaker : MonoBehaviour
             collider.sharedMesh = child.gameObject.GetComponent<MeshFilter>().mesh;
             collider.convex = true;
         }
+
+        GameObject plane = GameObject.Find("Mesh129_Model");
+        plane.GetComponent<MeshCollider>().sharedMesh = GameObject.Find("Plane").GetComponent<MeshFilter>().mesh;
     }
 
     // Update is called once per frame

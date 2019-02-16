@@ -11,12 +11,16 @@ public class TrackController : MonoBehaviour
     public GameObject campus;
     public GameObject playerRig;
     public Transform distanceText;
+    public Text countdown;
 
     List<GameObject> checkpoints;
 
     int nextCheckpoint;
     float radius = 9.144f;
     LineRenderer waypointLine;
+    float startTime;
+
+    public static bool movementEnabled;
     // Start is called before the first frame update
     void Start()
     {
@@ -47,23 +51,45 @@ public class TrackController : MonoBehaviour
 
         nextCheckpoint = 0;
         waypointLine = this.GetComponent<LineRenderer>();
+        movementEnabled = false;
+        startTime = Time.time;
+
     }
 
     // Update is called once per frame
     void Update()
     {
+
         Vector3 nextCPCenter = checkpoints[nextCheckpoint].transform.position;
         // Checking next checkpoint
         if (Vector3.Distance(playerRig.transform.position, nextCPCenter) < radius) {
+            checkpoints[nextCheckpoint].GetComponent<Renderer>().material.color = Color.green;
             nextCheckpoint++;
         }
         
-        if(nextCheckpoint < checkpoints.Count) {
+        if(nextCheckpoint < checkpoints.Count - 1) {
             nextCPCenter = checkpoints[nextCheckpoint].transform.position;
             waypointLine.SetPosition(0, playerRig.transform.position);
             waypointLine.SetPosition(1, nextCPCenter);
-            distanceText.GetComponent<Text>().text = "Distance: " + Vector3.Distance(playerRig.transform.position, nextCPCenter).ToString();
+            distanceText.GetComponent<Text>().text = "Distance: " + Vector3.Distance(playerRig.transform.position, nextCPCenter).ToString("0.00");
+        }
+        else {
+            distanceText.GetComponent<Text>().text = "Finished!";
         }
 
+
+        if (Time.time - startTime < 5) {
+            countdown.text = Mathf.Floor(5 - (Time.time - startTime)).ToString();
+            return;
+        }
+        else {
+            movementEnabled = true;
+            if(nextCheckpoint < checkpoints.Count - 1) {
+                countdown.text = "Elapsed Time:\t" + (Time.time - startTime - 5).ToString("0.00");
+            }
+            else {
+                movementEnabled = false;
+            }
+        }
     }
 }

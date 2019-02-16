@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Leap;
 using Leap.Unity;
+using UnityEngine.UI;
+
 public class MovementController : MonoBehaviour
 {
     public GameObject playerRig;
@@ -25,7 +27,6 @@ public class MovementController : MonoBehaviour
         max_speed = 3.0f;
         v_magnitude = 0.0f;
         v_dir = playerRig.transform.rotation * Vector3.forward;
-        //handModels.transform.position = playerRig.transform.position;
     }
 
     // Update is called once per frame
@@ -35,6 +36,11 @@ public class MovementController : MonoBehaviour
         Frame frame = provider.CurrentFrame;
         Hand rightHand = null;
         Hand leftHand = null;
+
+        if(!TrackController.movementEnabled) {
+            return;
+        }
+
 
         if(frame.Hands.Capacity > 0)
         {
@@ -101,7 +107,5 @@ public class MovementController : MonoBehaviour
         }
         // Move player forward
         playerRig.transform.Translate(v_magnitude * v_dir, Space.World);
-        //playerRig.transform.position += v_magnitude * v_dir;
-        //handModels.transform.position += v_magnitude * v_dir;
     }
 }
