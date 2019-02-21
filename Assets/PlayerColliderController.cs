@@ -6,6 +6,9 @@ public class PlayerColliderController : MonoBehaviour
 {
 
     public static bool hasCollided;
+    public AudioClip explosion;
+
+    private AudioSource explosionSound;
     // Start is called before the first frame update
     void Start()
     {
@@ -21,5 +24,7 @@ public class PlayerColliderController : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         hasCollided = true;
+        AudioSource audioSource = this.GetComponent<AudioSource>();
+        audioSource.PlayOneShot(explosion, 2);
     }
 }
