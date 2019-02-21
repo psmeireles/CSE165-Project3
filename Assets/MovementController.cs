@@ -111,5 +111,6 @@ public class MovementController : MonoBehaviour
         }
         // Move player forward
         playerRig.transform.Translate(v_magnitude * v_dir, Space.World);
+        playerRig.GetComponent<AudioSource>().pitch = v_magnitude + 1;
     }
 }
