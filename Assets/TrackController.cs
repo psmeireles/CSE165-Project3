@@ -11,7 +11,8 @@ public class TrackController : MonoBehaviour
     public GameObject campus;
     public GameObject playerRig;
     public Transform distanceText;
-    public Text countdown;
+    public Text countdownText;
+    public Text stopwatchText;
     public AudioClip applause;
     public AudioClip countdownClip;
     public GameObject cameraIndicator_Horiz;
@@ -75,6 +76,7 @@ public class TrackController : MonoBehaviour
         hasFinished = false;
 
         distanceText.GetComponent<Text>().text = "Distance: -";
+        stopwatchText.text = "Elapsed Time: 0.00";
         cameraIndicator_Horiz.SetActive(false);
         cameraIndicator_Vert.SetActive(false);
     }
@@ -97,7 +99,9 @@ public class TrackController : MonoBehaviour
             if (!audio.isPlaying) {
                 audio.PlayOneShot(countdownClip, 20);
             }
-            countdown.text = Mathf.Ceil(5 - (Time.time - startTime)).ToString();
+
+            countdownText.gameObject.SetActive(true);
+            countdownText.text = Mathf.Ceil(5 - (Time.time - startTime)).ToString();
             return;
         }
         else
@@ -108,11 +112,14 @@ public class TrackController : MonoBehaviour
                 if (!audio.isPlaying) {
                     audio.PlayOneShot(countdownClip, 20);
                 }
-                countdown.text = Mathf.Ceil(3 - (Time.time - collideTime)).ToString();
-                return;
+
+                countdownText.gameObject.SetActive(true);
+                countdownText.text = Mathf.Ceil(3 - (Time.time - collideTime)).ToString();
+                //return;
             }
             else
             {
+                countdownText.gameObject.SetActive(false);
                 movementEnabled = true;
                 PlayerColliderController.hasCollided = false;
             }
@@ -129,7 +136,7 @@ public class TrackController : MonoBehaviour
             distanceText.GetComponent<Text>().text = "Distance: " + Vector3.Distance(playerRig.transform.position, nextCPCenter).ToString("0.00") + "m";
 
             // Update stopwatch time
-            countdown.text = "Elapsed Time:\t" + (Time.time - startTime - 5).ToString("0.00");
+            stopwatchText.text = "Elapsed Time:\t" + (Time.time - startTime - 5).ToString("0.00");
 
             // Checking next checkpoint
             if (Vector3.Distance(playerRig.transform.position, nextCPCenter) < radius)
@@ -145,14 +152,14 @@ public class TrackController : MonoBehaviour
             if((nextCheckpoint_cam.x < 0.3 && nextCheckpoint_cam.z > 0) || (nextCheckpoint_cam.x > 0.5 && nextCheckpoint_cam.z < 0))
             {
                 cameraIndicator_Horiz.SetActive(true);
-                cameraIndicator_Horiz.transform.localPosition = new Vector3(-90, 0, 0);
+                cameraIndicator_Horiz.transform.localPosition = new Vector3(-100, 0, 0);
                 cameraIndicator_Horiz.transform.localRotation = Quaternion.Euler( new Vector3(0, 0, 90));
                 //Debug.Log("look left!");
             }
             else if ((nextCheckpoint_cam.x > 0.7 && nextCheckpoint_cam.z > 0) || (nextCheckpoint_cam.x < 0.5 && nextCheckpoint_cam.z < 0))
             {
                 cameraIndicator_Horiz.SetActive(true);
-                cameraIndicator_Horiz.transform.localPosition = new Vector3(90, 0, 0);
+                cameraIndicator_Horiz.transform.localPosition = new Vector3(100, 0, 0);
                 cameraIndicator_Horiz.transform.localRotation = Quaternion.Euler(new Vector3(0, 0, -90));
                 //Debug.Log("look right!");
             }
@@ -165,14 +172,14 @@ public class TrackController : MonoBehaviour
             if ((nextCheckpoint_cam.y < 0.3 && nextCheckpoint_cam.z > 0) || (nextCheckpoint_cam.y < 0.3 && nextCheckpoint_cam.z < 0))
             {
                 cameraIndicator_Vert.SetActive(true);
-                cameraIndicator_Vert.transform.localPosition = new Vector3(0, -90, 0);
+                cameraIndicator_Vert.transform.localPosition = new Vector3(0, -100, 0);
                 cameraIndicator_Vert.transform.localRotation = Quaternion.Euler(new Vector3(0, 0, 180));
                 //Debug.Log("look down!");
             }
             else if ((nextCheckpoint_cam.y > 0.7 && nextCheckpoint_cam.z > 0) || (nextCheckpoint_cam.y > 0.7 && nextCheckpoint_cam.z < 0))
             {
                 cameraIndicator_Vert.SetActive(true);
-                cameraIndicator_Vert.transform.localPosition = new Vector3(0, 90, 0);
+                cameraIndicator_Vert.transform.localPosition = new Vector3(0, 100, 0);
                 cameraIndicator_Vert.transform.localRotation = Quaternion.Euler(new Vector3(0, 0, 0));
                 //Debug.Log("look up!");
             }

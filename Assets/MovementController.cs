@@ -23,8 +23,8 @@ public class MovementController : MonoBehaviour
         provider = FindObjectOfType<LeapProvider>();
 
         
-        speed_increment = 0.001f;
-        max_speed = 3.0f;
+        speed_increment = 0.002f;
+        max_speed = 5.0f;
         v_magnitude = 0.0f;
         v_dir = playerRig.transform.rotation * Vector3.forward;
     }
