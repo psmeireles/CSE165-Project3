@@ -18,6 +18,7 @@ public class TrackController : MonoBehaviour
     public GameObject cameraIndicator_Horiz;
     public GameObject cameraIndicator_Vert;
     public GameObject mainCamera;
+    public GameObject airplane;
     public List<GameObject> checkpoints;
 
     public int nextCheckpoint;
@@ -56,6 +57,7 @@ public class TrackController : MonoBehaviour
 
         playerRig.transform.position = checkpoints[0].transform.position + new Vector3(0.0f, 0.6f, 0.0f);
         playerRig.transform.LookAt(checkpoints[1].transform.position);
+        airplane.transform.position = playerRig.transform.position;
         MovementController.v_dir = playerRig.transform.forward; // updates the initial velocity direction after turning the player
 
         nextCheckpoint = 0;
@@ -89,7 +91,16 @@ public class TrackController : MonoBehaviour
         if (PlayerColliderController.hasCollided)
         {
             collideTime = Time.time;
-            playerRig.transform.position = checkpoints[nextCheckpoint - 1].transform.position + new Vector3(0.0f, 0.6f, 0.0f);
+            if(MovementController.usePlane)
+            {
+                airplane.transform.position = checkpoints[nextCheckpoint - 1].transform.position + new Vector3(0.0f, 0.6f, 0.0f);
+                playerRig.transform.position = airplane.transform.position + airplane.transform.forward * 2.0f;
+                playerRig.transform.LookAt(airplane.transform.position);
+            }
+            else
+            {
+                playerRig.transform.position = checkpoints[nextCheckpoint - 1].transform.position + new Vector3(0.0f, 0.6f, 0.0f);
+            }
             movementEnabled = false;
             PlayerColliderController.hasCollided = false;
         }

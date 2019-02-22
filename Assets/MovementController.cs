@@ -10,6 +10,8 @@ public class MovementController : MonoBehaviour
     public GameObject playerRig;
     public GameObject rightHandObject;
     public GameObject handModels;
+    public GameObject airplane;
+    public GameObject mainCamera;
 
     LeapProvider provider;
     float v_magnitude;
@@ -17,9 +19,14 @@ public class MovementController : MonoBehaviour
     float speed_increment;
     public static Vector3 v_dir;
 
+    public static bool usePlane;
+
     // Start is called before the first frame update
     void Start()
     {
+        usePlane = false;
+        airplane.SetActive(false);
+        airplane.transform.position = playerRig.transform.position;
         provider = FindObjectOfType<LeapProvider>();
 
         
@@ -27,6 +34,7 @@ public class MovementController : MonoBehaviour
         max_speed = 5.0f;
         v_magnitude = 0.0f;
         v_dir = playerRig.transform.rotation * Vector3.forward;
+        
     }
 
     // Update is called once per frame
@@ -36,6 +44,13 @@ public class MovementController : MonoBehaviour
         Frame frame = provider.CurrentFrame;
         Hand rightHand = null;
         Hand leftHand = null;
+
+        if (usePlane)
+        {
+            airplane.SetActive(true);
+            airplane.transform.LookAt(airplane.transform.position - v_dir); // subtract to do the 180 deg rotation req to face airplane forward
+            //mainCamera.transform.Translate(-v_dir * 5.0f);
+        }
 
         playerRig.GetComponent<AudioSource>().pitch = v_magnitude + 1;
 
@@ -109,9 +124,23 @@ public class MovementController : MonoBehaviour
         {
             Vector dir = rightHand.Direction;
             v_dir = rightHandObject.transform.localToWorldMatrix * new Vector4(dir.x, dir.y, dir.z, 0.0f);
-            //Debug.Log(v_dir
+
+            Debug.Log("vdir:"+v_dir);
         }
-        // Move player forward
-        playerRig.transform.Translate(v_magnitude * v_dir, Space.World);
+        if(usePlane)
+        {
+            // Move player forward
+            airplane.transform.Translate(v_magnitude * v_dir, Space.World);
+            playerRig.transform.position = airplane.transform.position - v_dir * 2.0f;
+            playerRig.transform.LookAt(airplane.transform.position);
+        }
+        else
+        {
+            // Move player forward
+            playerRig.transform.Translate(v_magnitude * v_dir, Space.World);
+        }
+
+        
+        
     }
 }
