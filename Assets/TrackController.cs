@@ -14,7 +14,9 @@ public class TrackController : MonoBehaviour
     public Text countdown;
     public AudioClip applause;
     public AudioClip countdownClip;
-
+    public GameObject cameraIndicator_Horiz;
+    public GameObject cameraIndicator_Vert;
+    public GameObject mainCamera;
     public List<GameObject> checkpoints;
 
     public int nextCheckpoint;
@@ -53,6 +55,7 @@ public class TrackController : MonoBehaviour
 
         playerRig.transform.position = checkpoints[0].transform.position + new Vector3(0.0f, 0.6f, 0.0f);
         playerRig.transform.LookAt(checkpoints[1].transform.position);
+        MovementController.v_dir = playerRig.transform.forward; // updates the initial velocity direction after turning the player
 
         nextCheckpoint = 0;
         waypointLine = playerRig.GetComponent<LineRenderer>();
@@ -72,6 +75,8 @@ public class TrackController : MonoBehaviour
         hasFinished = false;
 
         distanceText.GetComponent<Text>().text = "Distance: -";
+        cameraIndicator_Horiz.SetActive(false);
+        cameraIndicator_Vert.SetActive(false);
     }
 
     // Update is called once per frame
@@ -133,6 +138,49 @@ public class TrackController : MonoBehaviour
                 nextCheckpoint++;
                 this.GetComponent<AudioSource>().Play();
             }
+
+            Vector3 nextCheckpoint_cam = mainCamera.GetComponent<Camera>().WorldToViewportPoint(nextCPCenter);
+            
+            //Debug.Log("HERE:" + nextCheckpoint_cam);
+            if((nextCheckpoint_cam.x < 0.3 && nextCheckpoint_cam.z > 0) || (nextCheckpoint_cam.x > 0.5 && nextCheckpoint_cam.z < 0))
+            {
+                cameraIndicator_Horiz.SetActive(true);
+                cameraIndicator_Horiz.transform.localPosition = new Vector3(-90, 0, 0);
+                cameraIndicator_Horiz.transform.localRotation = Quaternion.Euler( new Vector3(0, 0, 90));
+                //Debug.Log("look left!");
+            }
+            else if ((nextCheckpoint_cam.x > 0.7 && nextCheckpoint_cam.z > 0) || (nextCheckpoint_cam.x < 0.5 && nextCheckpoint_cam.z < 0))
+            {
+                cameraIndicator_Horiz.SetActive(true);
+                cameraIndicator_Horiz.transform.localPosition = new Vector3(90, 0, 0);
+                cameraIndicator_Horiz.transform.localRotation = Quaternion.Euler(new Vector3(0, 0, -90));
+                //Debug.Log("look right!");
+            }
+            else
+            {
+                //Debug.Log("disable arrow");
+                cameraIndicator_Horiz.SetActive(false);
+            }
+
+            if ((nextCheckpoint_cam.y < 0.3 && nextCheckpoint_cam.z > 0) || (nextCheckpoint_cam.y < 0.3 && nextCheckpoint_cam.z < 0))
+            {
+                cameraIndicator_Vert.SetActive(true);
+                cameraIndicator_Vert.transform.localPosition = new Vector3(0, -90, 0);
+                cameraIndicator_Vert.transform.localRotation = Quaternion.Euler(new Vector3(0, 0, 180));
+                //Debug.Log("look down!");
+            }
+            else if ((nextCheckpoint_cam.y > 0.7 && nextCheckpoint_cam.z > 0) || (nextCheckpoint_cam.y > 0.7 && nextCheckpoint_cam.z < 0))
+            {
+                cameraIndicator_Vert.SetActive(true);
+                cameraIndicator_Vert.transform.localPosition = new Vector3(0, 90, 0);
+                cameraIndicator_Vert.transform.localRotation = Quaternion.Euler(new Vector3(0, 0, 0));
+                //Debug.Log("look up!");
+            }
+            else
+            {
+                //Debug.Log("disable arrow");
+                cameraIndicator_Vert.SetActive(false);
+            }
         }
         else //Reached last checkpoint
         {
@@ -144,8 +192,13 @@ public class TrackController : MonoBehaviour
             hasFinished = true;
             waypointLine.enabled = false; // hide waypoint line
             distanceText.GetComponent<Text>().text = "Finished!";
+            cameraIndicator_Horiz.SetActive(false);
+            cameraIndicator_Vert.SetActive(false);
         }
 
+
+        //Debug.Log("mainCam Angle:"+mainCamera.transform.rotation.eulerAngles);
+        
     }
 
 }

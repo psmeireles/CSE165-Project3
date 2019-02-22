@@ -15,7 +15,7 @@ public class MovementController : MonoBehaviour
     float v_magnitude;
     float max_speed;
     float speed_increment;
-    Vector3 v_dir;
+    public static Vector3 v_dir;
 
     // Start is called before the first frame update
     void Start()
