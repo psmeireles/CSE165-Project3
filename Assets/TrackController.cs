@@ -13,6 +13,7 @@ public class TrackController : MonoBehaviour
     public Transform distanceText;
     public Text countdown;
     public AudioClip applause;
+    public AudioClip countdownClip;
 
     public List<GameObject> checkpoints;
 
@@ -76,6 +77,7 @@ public class TrackController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        AudioSource audio = this.GetComponent<AudioSource>();
 
         if (PlayerColliderController.hasCollided)
         {
@@ -87,6 +89,9 @@ public class TrackController : MonoBehaviour
 
         if (Time.time - startTime < 5)
         {
+            if (!audio.isPlaying) {
+                audio.PlayOneShot(countdownClip, 20);
+            }
             countdown.text = Mathf.Ceil(5 - (Time.time - startTime)).ToString();
             return;
         }
@@ -95,6 +100,9 @@ public class TrackController : MonoBehaviour
             // Check collision delay time
             if (Time.time - collideTime < 3)
             {
+                if (!audio.isPlaying) {
+                    audio.PlayOneShot(countdownClip, 20);
+                }
                 countdown.text = Mathf.Ceil(3 - (Time.time - collideTime)).ToString();
                 return;
             }
@@ -129,7 +137,7 @@ public class TrackController : MonoBehaviour
         else //Reached last checkpoint
         {
             if (!hasFinished) {
-                this.GetComponent<AudioSource>().PlayOneShot(applause, 2);
+                audio.PlayOneShot(applause, 2);
                 playerRig.GetComponent<AudioSource>().Pause();
             }
             movementEnabled = false;
