@@ -29,6 +29,7 @@ public class TrackController : MonoBehaviour
     float collideTime;
     bool hasFinished;
 
+    public bool spatializedSound;
     public static bool movementEnabled;
     // Start is called before the first frame update
     void Start()
@@ -81,6 +82,12 @@ public class TrackController : MonoBehaviour
         stopwatchText.text = "Elapsed Time: 0.00";
         cameraIndicator_Horiz.SetActive(false);
         cameraIndicator_Vert.SetActive(false);
+
+        if (spatializedSound) {
+            waypointLine.enabled = false;
+            trackLine.enabled = false;
+            distanceText.gameObject.SetActive(false);
+        }
     }
 
     // Update is called once per frame
@@ -158,51 +165,48 @@ public class TrackController : MonoBehaviour
             }
 
             Vector3 nextCheckpoint_cam = mainCamera.GetComponent<Camera>().WorldToViewportPoint(nextCPCenter);
-            
+
             //Debug.Log("HERE:" + nextCheckpoint_cam);
-            if((nextCheckpoint_cam.x < 0.3 && nextCheckpoint_cam.z > 0) || (nextCheckpoint_cam.x > 0.5 && nextCheckpoint_cam.z < 0))
-            {
-                cameraIndicator_Horiz.SetActive(true);
-                cameraIndicator_Horiz.transform.localPosition = new Vector3(-100, 0, 0);
-                cameraIndicator_Horiz.transform.localRotation = Quaternion.Euler( new Vector3(0, 0, 90));
-                //Debug.Log("look left!");
-            }
-            else if ((nextCheckpoint_cam.x > 0.7 && nextCheckpoint_cam.z > 0) || (nextCheckpoint_cam.x < 0.5 && nextCheckpoint_cam.z < 0))
-            {
-                cameraIndicator_Horiz.SetActive(true);
-                cameraIndicator_Horiz.transform.localPosition = new Vector3(100, 0, 0);
-                cameraIndicator_Horiz.transform.localRotation = Quaternion.Euler(new Vector3(0, 0, -90));
-                //Debug.Log("look right!");
-            }
-            else
-            {
-                //Debug.Log("disable arrow");
-                cameraIndicator_Horiz.SetActive(false);
-            }
+            if (!spatializedSound) {
+                if ((nextCheckpoint_cam.x < 0.3 && nextCheckpoint_cam.z > 0) || (nextCheckpoint_cam.x > 0.5 && nextCheckpoint_cam.z < 0)) {
+                    cameraIndicator_Horiz.SetActive(true);
+                    cameraIndicator_Horiz.transform.localPosition = new Vector3(-100, 0, 0);
+                    cameraIndicator_Horiz.transform.localRotation = Quaternion.Euler(new Vector3(0, 0, 90));
+                    //Debug.Log("look left!");
+                }
+                else if ((nextCheckpoint_cam.x > 0.7 && nextCheckpoint_cam.z > 0) || (nextCheckpoint_cam.x < 0.5 && nextCheckpoint_cam.z < 0)) {
+                    cameraIndicator_Horiz.SetActive(true);
+                    cameraIndicator_Horiz.transform.localPosition = new Vector3(100, 0, 0);
+                    cameraIndicator_Horiz.transform.localRotation = Quaternion.Euler(new Vector3(0, 0, -90));
+                    //Debug.Log("look right!");
+                }
+                else {
+                    //Debug.Log("disable arrow");
+                    cameraIndicator_Horiz.SetActive(false);
+                }
 
-            if ((nextCheckpoint_cam.y < 0.3 && nextCheckpoint_cam.z > 0) || (nextCheckpoint_cam.y < 0.3 && nextCheckpoint_cam.z < 0))
-            {
-                cameraIndicator_Vert.SetActive(true);
-                cameraIndicator_Vert.transform.localPosition = new Vector3(0, -100, 0);
-                cameraIndicator_Vert.transform.localRotation = Quaternion.Euler(new Vector3(0, 0, 180));
-                //Debug.Log("look down!");
+                if ((nextCheckpoint_cam.y < 0.3 && nextCheckpoint_cam.z > 0) || (nextCheckpoint_cam.y < 0.3 && nextCheckpoint_cam.z < 0)) {
+                    cameraIndicator_Vert.SetActive(true);
+                    cameraIndicator_Vert.transform.localPosition = new Vector3(0, -100, 0);
+                    cameraIndicator_Vert.transform.localRotation = Quaternion.Euler(new Vector3(0, 0, 180));
+                    //Debug.Log("look down!");
+                }
+                else if ((nextCheckpoint_cam.y > 0.7 && nextCheckpoint_cam.z > 0) || (nextCheckpoint_cam.y > 0.7 && nextCheckpoint_cam.z < 0)) {
+                    cameraIndicator_Vert.SetActive(true);
+                    cameraIndicator_Vert.transform.localPosition = new Vector3(0, 100, 0);
+                    cameraIndicator_Vert.transform.localRotation = Quaternion.Euler(new Vector3(0, 0, 0));
+                    //Debug.Log("look up!");
+                }
+                else {
+                    //Debug.Log("disable arrow");
+                    cameraIndicator_Vert.SetActive(false);
+                } 
             }
-            else if ((nextCheckpoint_cam.y > 0.7 && nextCheckpoint_cam.z > 0) || (nextCheckpoint_cam.y > 0.7 && nextCheckpoint_cam.z < 0))
-            {
-                cameraIndicator_Vert.SetActive(true);
-                cameraIndicator_Vert.transform.localPosition = new Vector3(0, 100, 0);
-                cameraIndicator_Vert.transform.localRotation = Quaternion.Euler(new Vector3(0, 0, 0));
-                //Debug.Log("look up!");
-            }
-            else
-            {
-                //Debug.Log("disable arrow");
-                cameraIndicator_Vert.SetActive(false);
-            }
-
-            AudioSource checkpointBeep = checkpoints[nextCheckpoint].GetComponent<AudioSource>();
-            if (!checkpointBeep.isPlaying) {
-                checkpointBeep.PlayOneShot(checkpointBeep.clip, 10);
+            else {
+                AudioSource checkpointBeep = checkpoints[nextCheckpoint].GetComponent<AudioSource>();
+                if (!checkpointBeep.isPlaying) {
+                    checkpointBeep.PlayOneShot(checkpointBeep.clip, 10);
+                }
             }
         }
         else //Reached last checkpoint
