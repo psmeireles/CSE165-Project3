@@ -12,6 +12,7 @@ public class TrackController : MonoBehaviour
     public GameObject playerRig;
     public Transform distanceText;
     public Text countdown;
+    public AudioClip applause;
 
     public List<GameObject> checkpoints;
 
@@ -21,6 +22,7 @@ public class TrackController : MonoBehaviour
     LineRenderer trackLine;
     float startTime;
     float collideTime;
+    bool hasFinished;
 
     public static bool movementEnabled;
     // Start is called before the first frame update
@@ -66,6 +68,7 @@ public class TrackController : MonoBehaviour
         movementEnabled = false;
         startTime = Time.time;
         collideTime = 0.0f;
+        hasFinished = false;
 
         distanceText.GetComponent<Text>().text = "Distance: -";
     }
@@ -120,11 +123,17 @@ public class TrackController : MonoBehaviour
             {
                 checkpoints[nextCheckpoint].GetComponent<Renderer>().material.color = new Color(0, 1, 0, 0.25f);
                 nextCheckpoint++;
+                this.GetComponent<AudioSource>().Play();
             }
         }
         else //Reached last checkpoint
-        { 
+        {
+            if (!hasFinished) {
+                this.GetComponent<AudioSource>().PlayOneShot(applause, 2);
+                playerRig.GetComponent<AudioSource>().Pause();
+            }
             movementEnabled = false;
+            hasFinished = true;
             waypointLine.enabled = false; // hide waypoint line
             distanceText.GetComponent<Text>().text = "Finished!";
         }

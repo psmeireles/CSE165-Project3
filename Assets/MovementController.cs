@@ -37,7 +37,9 @@ public class MovementController : MonoBehaviour
         Hand rightHand = null;
         Hand leftHand = null;
 
-        if(!TrackController.movementEnabled) {
+        playerRig.GetComponent<AudioSource>().pitch = v_magnitude + 1;
+
+        if (!TrackController.movementEnabled) {
             v_magnitude = 0.0f; // reset speed to 0 when not moving
             return;
         }
@@ -111,6 +113,5 @@ public class MovementController : MonoBehaviour
         }
         // Move player forward
         playerRig.transform.Translate(v_magnitude * v_dir, Space.World);
-        playerRig.GetComponent<AudioSource>().pitch = v_magnitude + 1;
     }
 }
