@@ -20,6 +20,7 @@ public class MovementController : MonoBehaviour
     public static Vector3 v_dir;
 
     public static bool usePlane;
+    int fingersExtended;
 
     // Start is called before the first frame update
     void Start()
@@ -34,7 +35,7 @@ public class MovementController : MonoBehaviour
         max_speed = 5.0f;
         v_magnitude = 0.0f;
         v_dir = playerRig.transform.rotation * Vector3.forward;
-        
+        fingersExtended = 0;
     }
 
     // Update is called once per frame
@@ -109,16 +110,28 @@ public class MovementController : MonoBehaviour
             }
         }
 
+        if(rightHand != null) {
+            int numFingers = 0;
+            foreach (Finger f in rightHand.Fingers) {
+                if (f.IsExtended)
+                    numFingers++;
+            }
 
+            if (numFingers == 0 && fingersExtended != numFingers) {
+                usePlane = !usePlane;
+            }
+
+            fingersExtended = numFingers;
+        }
 
         if (rightHand != null && rightHand.Fingers[1].IsExtended)
         {
             //Debug.Log("right index finger extended");
             //Debug.Log(rightHand.Rotation.angle);
             //rightHand.Rotation = (LeapQuaternion)(new Quaternion(0.0f, 0.0f, 0.0f, 1.0f));
-            Quaternion temp = new Quaternion(rightHand.Rotation.x, rightHand.Rotation.y, rightHand.Rotation.z, rightHand.Rotation.w);
+            //Quaternion temp = new Quaternion(rightHand.Rotation.x, rightHand.Rotation.y, rightHand.Rotation.z, rightHand.Rotation.w);
             //Debug.Log(temp.eulerAngles);
-
+            
         }
         if(rightHand != null)
         {
@@ -130,17 +143,19 @@ public class MovementController : MonoBehaviour
         if(usePlane)
         {
             // Move player forward
+            airplane.SetActive(true);
             airplane.transform.Translate(v_magnitude * v_dir, Space.World);
-            playerRig.transform.position = airplane.transform.position - v_dir * 2.0f;
-            playerRig.transform.LookAt(airplane.transform.position);
+            playerRig.transform.position = airplane.transform.position - v_dir * 2.0f + Vector3.up;
+            //playerRig.transform.LookAt(airplane.transform.position);
         }
         else
         {
+            airplane.SetActive(false);
             // Move player forward
             playerRig.transform.Translate(v_magnitude * v_dir, Space.World);
+            airplane.transform.position = playerRig.transform.position;
         }
 
-        
-        
+
     }
 }

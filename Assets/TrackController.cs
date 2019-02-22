@@ -84,7 +84,7 @@ public class TrackController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         AudioSource audio = this.GetComponent<AudioSource>();
 
