@@ -84,7 +84,7 @@ public class TrackController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
         AudioSource audio = this.GetComponent<AudioSource>();
 
@@ -198,6 +198,11 @@ public class TrackController : MonoBehaviour
             {
                 //Debug.Log("disable arrow");
                 cameraIndicator_Vert.SetActive(false);
+            }
+
+            AudioSource checkpointBeep = checkpoints[nextCheckpoint].GetComponent<AudioSource>();
+            if (!checkpointBeep.isPlaying) {
+                checkpointBeep.PlayOneShot(checkpointBeep.clip, 10);
             }
         }
         else //Reached last checkpoint
